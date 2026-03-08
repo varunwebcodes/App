@@ -3,11 +3,9 @@ const User = require('../models/users.model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
-
-
+const authMiddleware = require('../middlewares/auth.middleware');
 
 //Register 
-
 router.post('/register', async (req,res)=>{
     try{
         const {name , email , password} = req.body;
@@ -36,7 +34,6 @@ router.post('/register', async (req,res)=>{
 
 
 //Login
-
 router.post('/login', async (req,res)=>{
 
     try{
@@ -66,5 +63,15 @@ router.post('/login', async (req,res)=>{
 
 });
 
+//Protected Route
+router.get('/profile',authMiddleware,async (req,res)=>{
+    try{
+        const user = await User.findById(req,user.id).select('-password');
+        res.status(200).json({ user });
+        
+    }catch(error){
+        res.status(500).json({error: error.message})
+    }
+});
 
 module.exports = router;
