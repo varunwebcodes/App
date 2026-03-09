@@ -73,5 +73,29 @@ router.get('/profile', authMiddleware , async (req,res)=>{
     }
 });
 
+//Update Profile Route
+router.put('/update', authMiddleware, async(req,res)=>{
+    try{
+        const { name, email } = req.body;
+
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            {name , email},
+            {new: true}
+        ).select('-password');
+    }catch(error){
+        res.status(500).json({error: error.message})
+    }
+});
+
+//Delete Account Route
+router.delete('/delete', authMiddleware , async (req,res)=>{
+    try{
+        await User.findByIdAndDelete(req.user.id);
+        res.status(200).json({message: "Account Deleted Successfully"})
+    }catch(error){
+        res.status(500).json({error: error.message});
+    }
+});
 
 module.exports = router;
