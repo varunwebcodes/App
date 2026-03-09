@@ -81,8 +81,9 @@ router.put('/update', authMiddleware, async(req,res)=>{
         const user = await User.findByIdAndUpdate(
             req.user.id,
             {name , email},
-            {new: true}
+            {returnDocument: 'after'}
         ).select('-password');
+        res.status(200).json({ message: "Profile updated successfully", user });
     }catch(error){
         res.status(500).json({error: error.message})
     }
