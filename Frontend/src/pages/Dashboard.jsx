@@ -11,18 +11,13 @@ const Dashboard = () => {
         const fetchUser = async () => {
             try {
                 const token = localStorage.getItem('token');
-
                 if (!token) {
                     navigate('/login');
                     return;
                 }
-
                 const res = await axios.get('/profile', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
+                    headers: { Authorization: `Bearer ${token}` }
                 });
-
                 setUser(res.data.user);
             } catch (error) {
                 localStorage.removeItem('token');
@@ -31,7 +26,6 @@ const Dashboard = () => {
                 setLoading(false);
             }
         };
-
         fetchUser();
     }, []);
 
@@ -43,17 +37,17 @@ const Dashboard = () => {
     if (loading) {
         return (
             <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-                <p className="text-zinc-400 text-sm">Loading...</p>
+                <p className="text-zinc-400 text-sm animate-pulse">Loading...</p>
             </div>
         );
     }
 
     return (
         <div className="min-h-screen bg-zinc-950 px-4 py-10">
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-2xl mx-auto space-y-6">
 
                 {/* Header */}
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center justify-between">
                     <h1 className="text-3xl font-bold text-white">Dashboard</h1>
                     <button
                         onClick={handleLogout}
@@ -65,8 +59,6 @@ const Dashboard = () => {
 
                 {/* User Card */}
                 <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl">
-
-                    {/* Avatar */}
                     <div className="flex items-center gap-4 mb-6">
                         <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center text-white text-2xl font-bold">
                             {user?.name?.charAt(0).toUpperCase()}
@@ -77,10 +69,8 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    {/* Divider */}
                     <div className="border-t border-zinc-800 mb-6" />
 
-                    {/* User Info */}
                     <div className="space-y-4">
                         <div className="flex justify-between items-center">
                             <span className="text-zinc-400 text-sm">Full Name</span>
@@ -96,12 +86,23 @@ const Dashboard = () => {
                                 {new Date(user?.createdAt).toDateString()}
                             </span>
                         </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-zinc-400 text-sm">Account ID</span>
-                            <span className="text-zinc-500 text-xs font-mono">{user?._id}</span>
-                        </div>
                     </div>
+                </div>
 
+                {/* Action Buttons */}
+                <div className="grid grid-cols-2 gap-4">
+                    <button
+                        onClick={() => navigate('/update-profile')}
+                        className="bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-medium py-4 rounded-2xl transition text-sm"
+                    >
+                        ✏️ Update Profile
+                    </button>
+                    <button
+                        onClick={() => navigate('/posts')}
+                        className="bg-blue-600 hover:bg-blue-500 text-white font-medium py-4 rounded-2xl transition text-sm"
+                    >
+                        📝 My Posts
+                    </button>
                 </div>
 
             </div>
